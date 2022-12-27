@@ -1,0 +1,5 @@
+EISv3GyroDumpEnabled=0
+EISv2GyroDumpEnabled=0
+disableOIS=0
+isXiaoOIS=1
+disableDIS=1

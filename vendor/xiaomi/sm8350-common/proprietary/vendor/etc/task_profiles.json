@@ -20,47 +20,21 @@
       "Controller": "cpuset",
       "File": "audio-app/cpus"
     },
-    {
-      "Name": "MemStats",
-      "Controller": "memory",
-      "File": "memory.stat"
-    },
+
     {
       "Name": "MemLimit",
       "Controller": "memory",
-      "File": "memory.limit_in_bytes",
-      "FileV2": "memory.max"
+      "File": "memory.limit_in_bytes"
     },
     {
       "Name": "MemSoftLimit",
       "Controller": "memory",
-      "File": "memory.soft_limit_in_bytes",
-      "FileV2": "memory.low"
+      "File": "memory.soft_limit_in_bytes"
     },
     {
       "Name": "MemSwappiness",
       "Controller": "memory",
       "File": "memory.swappiness"
-    },
-    {
-      "Name": "MemUsage",
-      "Controller": "memory",
-      "File": "memory.usage_in_bytes"
-    },
-    {
-      "Name": "MemAndSwapUsage",
-      "Controller": "memory",
-      "File": "memory.memsw.usage_in_bytes"
-    },
-    {
-      "Name": "MemPressureLevel",
-      "Controller": "memory",
-      "File": "memory.pressure_level"
-    },
-    {
-      "Name": "MemCgroupEventControl",
-      "Controller": "memory",
-      "File": "cgroup.event_control"
     },
     {
       "Name": "UClampMin",
@@ -71,16 +45,6 @@
       "Name": "UClampMax",
       "Controller": "cpu",
       "File": "cpu.uclamp.max"
-    },
-    {
-      "Name": "UClampLatencySensitive",
-      "Controller": "cpu",
-      "File": "cpu.uclamp.latency_sensitive"
-    },
-    {
-      "Name": "FreezerState",
-      "Controller": "freezer",
-      "File": "cgroup.freeze"
     }
   ],
 
@@ -102,11 +66,11 @@
       "Name": "Frozen",
       "Actions": [
         {
-          "Name": "SetAttribute",
+          "Name": "JoinCgroup",
           "Params":
           {
-            "Name": "FreezerState",
-            "Value": "1"
+            "Controller": "freezer",
+            "Path": "frozen"
           }
         }
       ]
@@ -115,11 +79,11 @@
       "Name": "Unfrozen",
       "Actions": [
         {
-          "Name": "SetAttribute",
+          "Name": "JoinCgroup",
           "Params":
           {
-            "Name": "FreezerState",
-            "Value": "0"
+            "Controller": "freezer",
+            "Path": ""
           }
         }
       ]
@@ -132,20 +96,7 @@
           "Params":
           {
             "Controller": "cpu",
-            "Path": "system"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "ServicePerformance",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpu",
-            "Path": "system-background"
+            "Path": ""
           }
         }
       ]
@@ -190,79 +141,14 @@
       ]
     },
     {
-      "Name": "CameraServicePerformance",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpu",
-            "Path": "camera-daemon"
-          }
-        }
-      ]
-    },
-    {
       "Name": "AudioAppPerformance",
       "Actions" : [
         {
           "Name" : "JoinCgroup",
           "Params" :
           {
-            "Controller": "schedtune",
+            "Controller": "cpu",
             "Path": "audio-app"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "NNApiHALPerformance",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpu",
-            "Path": "nnapi-hal"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "Dex2oatPerformance",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpu",
-            "Path": "dex2oat"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CpuPolicySpread",
-      "Actions": [
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "UClampLatencySensitive",
-            "Value": "1"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CpuPolicyPack",
-      "Actions": [
-        {
-          "Name": "SetAttribute",
-          "Params":
-          {
-            "Name": "UClampLatencySensitive",
-            "Value": "0"
           }
         }
       ]
@@ -493,6 +379,7 @@
         }
       ]
     },
+
     {
       "Name": "LowIoPriority",
       "Actions": [
@@ -566,33 +453,6 @@
           "Params":
           {
             "Slack": "50000"
-          }
-        }
-      ]
-    },
-
-    {
-      "Name": "SFMainPolicy",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "system-background"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "SFRenderEnginePolicy",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "system-background"
           }
         }
       ]
@@ -701,14 +561,6 @@
       "Profiles": [ "MaxPerformance", "MaxIoPriority", "TimerSlackNormal" ]
     },
     {
-      "Name": "SCHED_SP_SYSTEM",
-      "Profiles": [ "ServicePerformance", "LowIoPriority", "TimerSlackNormal" ]
-    },
-    {
-      "Name": "VMCompilationPerformance",
-      "Profiles": [ "HighPerformance", "ProcessCapacityHigh", "LowIoPriority", "TimerSlackNormal" ]
-    },
-    {
       "Name": "SCHED_SP_RT_APP",
       "Profiles": [ "RealtimePerformance", "MaxIoPriority", "TimerSlackNormal" ]
     },
@@ -735,14 +587,6 @@
     {
       "Name": "CPUSET_SP_RESTRICTED",
       "Profiles": [ "ServiceCapacityRestricted", "TimerSlackNormal" ]
-    },
-    {
-      "Name": "Dex2OatBootComplete",
-      "Profiles": [ "Dex2oatPerformance", "LowIoPriority", "TimerSlackHigh" ]
-    },
-    {
-      "Name": "OtaProfiles",
-      "Profiles": [ "ServiceCapacityLow", "LowIoPriority", "HighEnergySaving" ]
     }
   ]
 }
